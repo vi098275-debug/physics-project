@@ -2,282 +2,269 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Электрический ток в полупроводниках | Интерактив</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Электрический ток в полупроводниках. | Собственная и примесная проводимости.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --cyan: #00f2fe;
             --pink: #ff007f;
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.12);
-            --bg: #030a16;
         }
+/* ТВОЁ НАЧАЛО (ОНО У ТЕБЯ УЖЕ ЕСТЬ) */
+:root {
+    --cyan: #00f2fe;
+    --pink: #ff007f;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.12);
+}
 
-        * { box-sizing: border-box; transition: all 0.3s ease; scroll-behavior: smooth; }
+* { box-sizing: border-box; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); scroll-behavior: smooth; }
+
+body {
+    margin: 0; padding: 0;
+    background: #030a16;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- ВОТ СЮДА ВСТАВЛЯЙ ЭТОТ КУСОК (ПРОСТО КОПИРУЙ) --- */
+
+.btn {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+    padding: 16px !important;
+    cursor: pointer !important;
+    background: #1a222d !important;
+    color: #fff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 12px !important;
+    /* Объемный бортик снизу */
+    box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.4) !important;
+    transition: all 0.1s ease !important; /* Чтобы быстро прожималась */
+    position: relative !important;
+    outline: none !important;
+}
+
+/* Кнопка чуть всплывает при наведении */
+.btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 0 #000, 0 12px 20px rgba(0,0,0,0.5) !important;
+    background: #252e3a !important;
+}
+
+/* Кнопка РЕАЛЬНО вдавливается при клике */
+.btn:active {
+    transform: translateY(4px) !important;
+    box-shadow: 0 0 0 #000 !important; /* Убираем тень при нажатии */
+}
+
+/* Стили для кнопки Нагрев (с твоим градиентом) */
+.btn-heat {
+    background: linear-gradient(90deg, #00f2fe, #ff007f) !important;
+    border: none !important;
+    box-shadow: 0 4px 0 #800040, 0 8px 15px rgba(255,0,127,0.3) !important;
+}
+
+.btn-heat:hover {
+    box-shadow: 0 6px 0 #800040, 0 12px 25px rgba(255,0,127,0.5) !important;
+}
+
+/* --- КОНЕЦ МОЕГО КУСКА --- */
+
+        * { box-sizing: border-box; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); scroll-behavior: smooth; }
 
         body {
             margin: 0; padding: 0;
-            background: var(--bg);
+            background: #030a16;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
         }
 
-        /* Анимированный фон */
+        /* ЖИДКИЙ ФОН */
         .liquid-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -1; overflow: hidden; filter: blur(80px);
         }
         .blob {
             position: absolute; width: 500px; height: 500px; border-radius: 50%;
-            opacity: 0.3; animation: move 20s infinite alternate;
+            opacity: 0.4; animation: move 20s infinite alternate;
         }
         .blob1 { background: var(--cyan); top: -100px; left: -100px; }
         .blob2 { background: var(--pink); bottom: -100px; right: -100px; animation-delay: -5s; }
+        .blob3 { background: #4facfe; top: 50%; left: 50%; animation-delay: -10s; }
 
         @keyframes move {
             from { transform: translate(0, 0) scale(1); }
             to { transform: translate(200px, 100px) scale(1.2); }
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 80px 20px; }
 
-        header { text-align: center; margin-bottom: 50px; }
+        header { text-align: center; margin-bottom: 80px; }
         h1 {
-            font-size: 2.5rem; font-weight: 600;
+            font-size: 3.5rem; font-weight: 600; letter-spacing: -2px;
             background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 0;
         }
-
-        /* --- ЛАБОРАТОРНАЯ ЗОНА --- */
-        .lab-card {
+        .glass-panel {
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 40px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            position: relative;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        }
+        .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 30px 60px rgba(0,242,254,0.15);
         }
 
-        @media (min-width: 900px) {
-            .lab-card { flex-direction: row; height: 600px; }
+        h2 { font-size: 2rem; margin-top: 0; background: linear-gradient(90deg, var(--cyan), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { line-height: 1.8; opacity: 0.8; font-weight: 300; font-size: 1.1rem; }
+
+        /* ИНТЕРАКТИВНАЯ ЛАБА */
+        .lab-wrap { display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
+        .v-screen {
+            background: rgba(0,0,0,0.4); border-radius: 30px; 
+            border: 1px solid var(--border); overflow: hidden; position: relative;
         }
+        canvas { width: 100%; height: 450px; cursor: crosshair; }
 
-        #canvas-container {
-            flex: 1; background: #01060b; position: relative; overflow: hidden;
+        .side-panel { display: flex; flex-direction: column; gap: 20px; }
+        .data-card {
+            background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px;
+            text-align: center; border: 1px solid var(--border);
         }
-
-        canvas { width: 100%; height: 100%; display: block; }
-
-        .controls {
-            width: 100%; padding: 30px;
-            background: rgba(0, 0, 0, 0.2);
-            border-left: 1px solid var(--border);
-            display: flex; flex-direction: column; gap: 20px;
+        .data-card b { display: block; font-size: 1.5rem; color: var(--cyan); }[12.05.2026 23:58] ¿corpse ?: .btn {
+            background: rgba(255,255,255,0.1); border: 1px solid var(--border);
+            color: #fff; padding: 18px; border-radius: 20px; font-weight: 600;
+            cursor: pointer; backdrop-filter: blur(10px);
         }
+        .btn:hover { background: #fff; color: #000; transform: scale(1.05); }
+        .btn-heat { background: linear-gradient(45deg, var(--cyan), var(--pink)); border: none; }
 
-        @media (min-width: 900px) { .controls { width: 350px; } }
-
-        /* Твои стилизованные кнопки */
-        .btn {
-            display: block !important;
-            width: 100% !important;
-            padding: 16px !important;
-            cursor: pointer !important;
-            background: #1a222d !important;
-            color: #fff !important;
-            font-family: 'Montserrat', sans-serif !important;
-            font-weight: 600 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 1px !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.4) !important;
-            position: relative !important;
-            outline: none !important;
-            margin-bottom: 5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 0 #000, 0 12px 20px rgba(0,0,0,0.5) !important;
-            background: #252e3a !important;
-        }
-
-        .btn:active {
-            transform: translateY(4px) !important;
-            box-shadow: 0 0 0 #000 !important;
-        }
-
-        .btn-heat {
-            background: linear-gradient(90deg, #00f2fe, #ff007f) !important;
-            border: none !important;
-            box-shadow: 0 4px 0 #800040, 0 8px 15px rgba(255,0,127,0.3) !important;
-        }
-
-        /* Слайдеры */
-        .slider-group { display: flex; flex-direction: column; gap: 10px; }
-        input[type=range] { width: 100%; cursor: pointer; accent-color: var(--cyan); }
-        label { font-size: 0.9rem; color: rgba(255,255,255,0.7); }
-
-        .stat-badge {
-            padding: 10px; background: rgba(255,255,255,0.05);
-            border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border);
-        }
+        footer { text-align: center; padding: 100px 0; opacity: 0.4; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="liquid-bg">
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-    </div>
+<div class="liquid-bg">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+</div>
 
-    <div class="container">
-        <header>
-            <h1>Собственная проводимость полупроводников</h1>
-            <p>Интерактивная модель разрыва ковалентных связей при нагреве</p>
-        </header>
+<div class="container">
+    <header>
+        <h1>Мир полупроводников</h1>
+        <p style="opacity: 0.5;">ФИЗИКА ПОЛУПРОВОДНИКОВ ЭЛЕКТРИЧЕСКИЙ ТОК • СОБСТВЕННАЯ И ПРИМЕСНАЯ ПРОВОДИМОСТЬ</p>
+    </header>
 
-        <div class="lab-card">
-            <div id="canvas-container">
-                <canvas id="labCanvas"></canvas>
+    <section class="glass-panel">
+        <h2>01. Общая характеристика полупроводников.</h2>
+        <p>Полупроводники — вещества, удельное сопротивление которых имеет промежуточное значение между удельным сопротивлением металлов (10–6—10–8 Ом · м) и удельным сопротивлением диэлектриков (108—1013 Ом · м). <b>Запрещенная зона</b> Исследования показывают, что у ряда элементов (кремний, германий, селен, индий, мышьяк и др.) и соединений (PbS, CdS, GaAs и др.) удельное сопротивление с увеличением температуры не растёт, как у металлов, а, наоборот, чрезвычайно резко уменьшается. Такое свойство присуще именно полупроводникам. При температурах, близких к абсолютному нулю, удельное сопротивление полупроводников очень велико. Это означает, что при низких температурах полупроводник ведёт себя как диэлектрик. По мере повышения температуры его удельное сопротивление быстро уменьшается.</p>
+    </section>
+ <section class="glass-panel">
+        <h2>02. Строение кристаллической решётки (на примере кремния).</h2>
+        <p>Кремний — четырёхвалентный элемент. Это означает, что во внешней оболочке его атома имеется четыре электрона, сравнительно слабо связанные с ядром. Число ближайших соседей каждого атома кремния также равно четырём. Взаимодействие пары соседних атомов осуществляется с помощью парноэлектронной связи, называемой ковалентной связью. В образовании этой связи от каждого атома участвует по одному валентному электрону, электроны отделяются от атома, которому они принадлежат (коллективируются кристаллом), и при своём движении большую часть времени проводят в пространстве между соседними атомами. Их отрицательный заряд удерживает положительные ионы кремния друг возле друга. Не надо думать, что коллективированная пара электронов принадлежит лишь двум атомам. Каждый атом образует четыре связи с соседними, и любой валентный электрон может двигаться по одной из них. Дойдя до соседнего атома, он может перейти к следующему, а затем дальше вдоль всего кристалла. Валентные электроны принадлежат всему кристаллу. Парноэлектронные связи в кристалле кремния достаточно прочны и при низких температурах не разрываются. Поэтому кремний при низкой температуре не проводит электрический ток. Участвующие в связи атомов валентные электроны являются как бы цементирующим раствором, удерживающим кристаллическую решётку, и внешнее электрическое поле не оказывает заметного влияния на их движение. Аналогичное строение имеет кристалл германия.</p>
+   <section class="glass-panel" id="lab">
+    <h2>Онлайн опыт</h2>
+    <div class="lab-wrap">
+        <div class="v-screen">
+            <canvas id="labCanvas"></canvas>
+        </div>
+        <div class="side-panel">
+            <div class="data-card">
+                <span>ТОК</span><br><b id="v-cond">0.00</b>
+            </div>
+            <div class="data-card">
+                <span>ТЕМПЕРАТУРА</span><br><b id="v-temp">293 K</b>
             </div>
 
-            <div class="controls">
-                <div class="slider-group">
-                    <label>Температура: <span id="tempVal">300</span> K</label>
-                    <input type="range" id="tempSlider" min="200" max="1000" value="300">
-                </div>
-
-                <div class="slider-group">
-                    <label>Напряжение: <span id="voltVal">0</span> В</label>
-                    <input type="range" id="voltSlider" min="0" max="50" value="0">
-                </div>
-
-                <button class="btn btn-heat" id="generateBtn">Мгновенный нагрев</button>
-                <button class="btn" id="resetBtn">Сброс системы</button>
-
-                <div class="stat-badge">
-                    Свободных носителей: <span id="countVal">0</span>
-                </div>
-                <div style="font-size: 0.7rem; color: gray;">
-                    ● Синие: Электроны<br>
-                    ● Розовые: Дырки
-                </div>
-            </div>
+            <!-- КНОПКИ (ТЕПЕРЬ ЦЕЛЫЕ) -->
+            <button class="btn" onclick="spawn(1)">+ n-типа</button>
+            <button class="btn" onclick="spawn(2)">+ p-типа</button>
+            <button class="btn btn-heat" onmousedown="itHeat=true" onmouseup="itHeat=false" onmouseleave="itHeat=false">Нагрев</button>
+            <button class="btn" onclick="fullReset()">Сброс системы</button>
         </div>
     </div>
+</section>
+ <section class="glass-panel">
+        <h2>03. Примесная проводимость.</h2>
+        <p>Собственная проводимость полупроводников обычно невелика, так как мало число свободных электронов: например, в германии при комнатной температуре пе = 3 · 1013 см–3. В то же время число атомов германия в 1 см3 порядка 1023. Таким образом, число свободных электронов составляет примерно одну десятимиллиардную часть от общего числа атомов.
+Проводимость полупроводников можно существенно увеличить, внедряя в них примесь. В этом случае наряду с собственной проводимостью возникает дополнительная — примесная проводимость. Проводимость проводников, обусловленная внесением в их кристаллические решётки примесей (атомов посторонних химических элементов), называется примесной проводимостью. Донорные примеси. Добавим в кремний небольшое количество мышьяка. Атомы мышьяка имеют пять валентных электронов. Четыре из них участвуют в создании ковалентной связи данного атома с окружающими атомами кремния. Пятый валентный электрон оказывается слабо связанным с атомом. Он легко покидает атом мышьяка и становится свободным. При добавлении одной десятимиллионной доли атомов мышьяка концентрация свободных электронов становится равной 1016 см–3. Это в тысячу раз больше концентрации свободных электронов в чистом полупроводнике. Примеси, легко отдающие электроны и, следовательно, увеличивающие число свободных электронов, называют донорными (отдающими) примесями. Свободные электроны перемещаются по полупроводнику подобно тому, как перемещаются свободные электроны в металле. Полупроводники, имеющие донорные примеси и потому обладающие большим числом электронов (по сравнению с числом дырок), называются полупроводниками n-типа (от английского слова negative — отрицательный). В полупроводнике n-типа электроны являются основными носителями заряда, а дырки — неосновными.
+Акцепторные примеси. Если в качестве примеси использовать индий, атомы которого трёхвалентны, то характер проводимости полупроводника меняется. Для образования нормальных парноэлектронных связей с соседями атому индия недостаёт одного электрона, который он берёт у соседнего атома кристалла. В результате образуется дырка. Число дырок в кристалле равно числу атомов примеси. Примеси в полупроводнике, создающие дополнительную концентрацию дырок, называют акцепторными (принимающими) примесями. При наличии электрического поля дырки перемещаются направленно и возникает электрический ток, обусловленный дырочной проводимостью. Полупроводники с преобладанием дырочной проводимости над электронной называют полупроводниками р-типа (от английского слова positive — положительный). Основными носителями заряда в полупроводнике p-типа являются дырки, а неосновными — электроны.</p>
+    </section>
 
-    <script>
-        const canvas = document.getElementById('labCanvas');
-        const ctx = canvas.getContext('2d');
-        const tempSlider = document.getElementById('tempSlider');
-        const voltSlider = document.getElementById('voltSlider');
-        const countDisp = document.getElementById('countVal');
+    <footer>
+        НАД САЙТОМ РАБОТАЛИ: ИСАЕВА ВИКТОРИЯ И ТИМОШЕК ЯРОСЛАВ
+    </footer>
+</div>
 
-        let particles = [];
-        let width, height;
+<script>
+    const canvas = document.getElementById('labCanvas');
+    const ctx = canvas.getContext('2d');
+    let dots = [], temp = 293, cond = 0, itHeat = false;
 
-        function resize() {
-            width = canvas.width = canvas.offsetWidth;
-            height = canvas.height = canvas.offsetHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor(type) {
-                this.type = type; // 'electron' или 'hole'
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.r = type === 'electron' ? 3 : 5;
-                this.color = type === 'electron' ? '#00f2fe' : '#ff007f';
-                this.initVelocity();
-            }
-
-            initVelocity() {
-                const speed = (tempSlider.value / 300) * 1.5;
-                this.vx = (Math.random() - 0.5) * speed;
-                this.vy = (Math.random() - 0.5) * speed;
-            }
-
-            update() {
-                // Влияние электрического поля (напряжение)
-                let voltEff = parseFloat(voltSlider.value) / 10;
-                if (this.type === 'electron') this.vx += voltEff * 0.1;
-                else this.vx -= voltEff * 0.1;
-
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // Границы
-                if (this.x > width) this.x = 0;
-                if (this.x < 0) this.x = width;
-                if (this.y > height) this.y = 0;
-                if (this.y < 0) this.y = height;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                if (this.type === 'hole') {
-                    ctx.strokeStyle = this.color;
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                } else {
-                    ctx.fill();
-                }
-                ctx.closePath();
-            }
-        }
-
-        function spawnPair() {
-            particles.push(new Particle('electron'));
-            particles.push(new Particle('hole'));
-        }
-
-        function loop() {
-            // Очистка с эффектом шлейфа
-            ctx.fillStyle = 'rgba(1, 6, 11, 0.3)';
-            ctx.fillRect(0, 0, width, height);
-
-            const temp = tempSlider.value;
-            document.getElementById('tempVal').innerText = temp;
-            document.getElementById('voltVal').innerText = voltSlider.value;
-            countDisp.innerText = particles.length;
-
-            // Вероятность генерации пары от температуры
-            if (Math.random() < (temp - 200) / 5000) {
-                spawnPair();
-            }
-
-            // Рекомбинация (удаление при столкновении)
-            // Для оптимизации проверяем не каждый кадр
-            if (Math.random() > 0.8 && particles.length > 0) {
-                particles.splice(0, 2);
-            }
-
-            particles.forEach(p => {
-                p.update();
-                p.draw();
+    function resize() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.onresize = resize; function spawn(type) {
+        cond += 3;
+        for(let i=0; i<15; i++) {
+            dots.push({
+                x: Math.random()*canvas.width,
+                y: Math.random()*canvas.height,
+                vx: (Math.random()-0.5)*2,
+                vy: (Math.random()-0.5)*2,
+                c: type === 1 ? '#00f2fe' : '#ff007f'
             });
+        }
+    }
 
-            requestAnimationFrame(loop);
+    function fullReset() { dots = []; cond = 0; temp = 293; }
+
+    function animate() {ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+
+        if(itHeat) {
+            temp += 1; cond += 0.05;
+            if(Math.random() > 0.8) spawn(Math.random() > 0.5 ? 1 : 2);
         }
 
-        document.getElementById('generateBtn').onclick = () => {
-            for(let i=0; i<20; i++) spawnPair();
-        };
+        document.getElementById('v-cond').innerText = (cond/10).toFixed(2) + " mA";
+        document.getElementById('v-temp').innerText = temp + " K";
+         dots.forEach(d => {
+            let s = temp / 250;
+            d.x += d.vx * s; d.y += d.vy * s;
+            if(d.x < 0) d.x = canvas.width; if(d.x > canvas.width) d.x = 0;
+            if(d.y < 0) d.y = canvas.height; if(d.y > canvas.height) d.y = 0;
 
-        document.getElementById('resetBtn').onclick = () => {
-            particles = [];
-        };
+            ctx.fillStyle = d.c;
+            ctx.shadowBlur = 15; ctx.shadowColor = d.c;
+            ctx.beginPath(); ctx.arc(d.x, d.y, 3, 0, 7); ctx.fill();
+            ctx.shadowBlur = 0;
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
 
-        loop();
-    </script>
 </body>
 </html>
