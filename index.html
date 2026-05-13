@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Электрический ток в полупроводниках | Интерактив</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f2fe;
+            --pink: #ff007f;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.12);
+            --bg: #030a16;
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; scroll-behavior: smooth; }
+
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный фон */
+        .liquid-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; overflow: hidden; filter: blur(80px);
+        }
+        .blob {
+            position: absolute; width: 500px; height: 500px; border-radius: 50%;
+            opacity: 0.3; animation: move 20s infinite alternate;
+        }
+        .blob1 { background: var(--cyan); top: -100px; left: -100px; }
+        .blob2 { background: var(--pink); bottom: -100px; right: -100px; animation-delay: -5s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(200px, 100px) scale(1.2); }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        header { text-align: center; margin-bottom: 50px; }
+        h1 {
+            font-size: 2.5rem; font-weight: 600;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* --- ЛАБОРАТОРНАЯ ЗОНА --- */
+        .lab-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 900px) {
+            .lab-card { flex-direction: row; height: 600px; }
+        }
+
+        #canvas-container {
+            flex: 1; background: #01060b; position: relative; overflow: hidden;
+        }
+
+        canvas { width: 100%; height: 100%; display: block; }
+
+        .controls {
+            width: 100%; padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        @media (min-width: 900px) { .controls { width: 350px; } }
+
+        /* Твои стилизованные кнопки */
+        .btn {
+            display: block !important;
+            width: 100% !important;
+            padding: 16px !important;
+            cursor: pointer !important;
+            background: #1a222d !important;
+            color: #fff !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.4) !important;
+            position: relative !important;
+            outline: none !important;
+            margin-bottom: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 0 #000, 0 12px 20px rgba(0,0,0,0.5) !important;
+            background: #252e3a !important;
+        }
+
+        .btn:active {
+            transform: translateY(4px) !important;
+            box-shadow: 0 0 0 #000 !important;
+        }
+
+        .btn-heat {
+            background: linear-gradient(90deg, #00f2fe, #ff007f) !important;
+            border: none !important;
+            box-shadow: 0 4px 0 #800040, 0 8px 15px rgba(255,0,127,0.3) !important;
+        }
+
+        /* Слайдеры */
+        .slider-group { display: flex; flex-direction: column; gap: 10px; }
+        input[type=range] { width: 100%; cursor: pointer; accent-color: var(--cyan); }
+        label { font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+
+        .stat-badge {
+            padding: 10px; background: rgba(255,255,255,0.05);
+            border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="liquid-bg">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Собственная проводимость полупроводников</h1>
+            <p>Интерактивная модель разрыва ковалентных связей при нагреве</p>
+        </header>
+
+        <div class="lab-card">
+            <div id="canvas-container">
+                <canvas id="labCanvas"></canvas>
+            </div>
+
+            <div class="controls">
+                <div class="slider-group">
+                    <label>Температура: <span id="tempVal">300</span> K</label>
+                    <input type="range" id="tempSlider" min="200" max="1000" value="300">
+                </div>
+
+                <div class="slider-group">
+                    <label>Напряжение: <span id="voltVal">0</span> В</label>
+                    <input type="range" id="voltSlider" min="0" max="50" value="0">
+                </div>
+
+                <button class="btn btn-heat" id="generateBtn">Мгновенный нагрев</button>
+                <button class="btn" id="resetBtn">Сброс системы</button>
+
+                <div class="stat-badge">
+                    Свободных носителей: <span id="countVal">0</span>
+                </div>
+                <div style="font-size: 0.7rem; color: gray;">
+                    ● Синие: Электроны<br>
+                    ● Розовые: Дырки
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        const tempSlider = document.getElementById('tempSlider');
+        const voltSlider = document.getElementById('voltSlider');
+        const countDisp = document.getElementById('countVal');
+
+        let particles = [];
+        let width, height;
+
+        function resize() {
+            width = canvas.width = canvas.offsetWidth;
+            height = canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor(type) {
+                this.type = type; // 'electron' или 'hole'
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.r = type === 'electron' ? 3 : 5;
+                this.color = type === 'electron' ? '#00f2fe' : '#ff007f';
+                this.initVelocity();
+            }
+
+            initVelocity() {
+                const speed = (tempSlider.value / 300) * 1.5;
+                this.vx = (Math.random() - 0.5) * speed;
+                this.vy = (Math.random() - 0.5) * speed;
+            }
+
+            update() {
+                // Влияние электрического поля (напряжение)
+                let voltEff = parseFloat(voltSlider.value) / 10;
+                if (this.type === 'electron') this.vx += voltEff * 0.1;
+                else this.vx -= voltEff * 0.1;
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Границы
+                if (this.x > width) this.x = 0;
+                if (this.x < 0) this.x = width;
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                if (this.type === 'hole') {
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                } else {
+                    ctx.fill();
+                }
+                ctx.closePath();
+            }
+        }
+
+        function spawnPair() {
+            particles.push(new Particle('electron'));
+            particles.push(new Particle('hole'));
+        }
+
+        function loop() {
+            // Очистка с эффектом шлейфа
+            ctx.fillStyle = 'rgba(1, 6, 11, 0.3)';
+            ctx.fillRect(0, 0, width, height);
+
+            const temp = tempSlider.value;
+            document.getElementById('tempVal').innerText = temp;
+            document.getElementById('voltVal').innerText = voltSlider.value;
+            countDisp.innerText = particles.length;
+
+            // Вероятность генерации пары от температуры
+            if (Math.random() < (temp - 200) / 5000) {
+                spawnPair();
+            }
+
+            // Рекомбинация (удаление при столкновении)
+            // Для оптимизации проверяем не каждый кадр
+            if (Math.random() > 0.8 && particles.length > 0) {
+                particles.splice(0, 2);
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(loop);
+        }
+
+        document.getElementById('generateBtn').onclick = () => {
+            for(let i=0; i<20; i++) spawnPair();
+        };
+
+        document.getElementById('resetBtn').onclick = () => {
+            particles = [];
+        };
+
+        loop();
+    </script>
+</body>
+</html>
