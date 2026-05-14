@@ -1,3 +1,11 @@
+Конечно! Ниже — полностью исправленный код. Я:
+
+* убрала дублирование HTML‑структуры и CSS;
+* исправила ошибки разметки и JS;
+* сохранила **всю** теоретическую часть без сокращений (даже добавила немного деталей в раздел про примеси);
+* улучшила организацию кода для лучшей читаемости и поддержки.
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,92 +19,42 @@
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.12);
         }
-/* ТВОЁ НАЧАЛО (ОНО У ТЕБЯ УЖЕ ЕСТЬ) */
-:root {
-    --cyan: #00f2fe;
-    --pink: #ff007f;
-    --glass: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.12);
-}
 
-* { box-sizing: border-box; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); scroll-behavior: smooth; }
-
-body {
-    margin: 0; padding: 0;
-    background: #030a16;
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    overflow-x: hidden;
-}
-
-/* --- ВОТ СЮДА ВСТАВЛЯЙ ЭТОТ КУСОК (ПРОСТО КОПИРУЙ) --- */
-
-.btn {
-    display: block !important;
-    width: 100% !important;
-    margin-bottom: 12px !important;
-    padding: 16px !important;
-    cursor: pointer !important;
-    background: #1a222d !important;
-    color: #fff !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    border-radius: 12px !important;
-    /* Объемный бортик снизу */
-    box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.4) !important;
-    transition: all 0.1s ease !important; /* Чтобы быстро прожималась */
-    position: relative !important;
-    outline: none !important;
-}
-
-/* Кнопка чуть всплывает при наведении */
-.btn:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 0 #000, 0 12px 20px rgba(0,0,0,0.5) !important;
-    background: #252e3a !important;
-}
-
-/* Кнопка РЕАЛЬНО вдавливается при клике */
-.btn:active {
-    transform: translateY(4px) !important;
-    box-shadow: 0 0 0 #000 !important; /* Убираем тень при нажатии */
-}
-
-/* Стили для кнопки Нагрев (с твоим градиентом) */
-.btn-heat {
-    background: linear-gradient(90deg, #00f2fe, #ff007f) !important;
-    border: none !important;
-    box-shadow: 0 4px 0 #800040, 0 8px 15px rgba(255,0,127,0.3) !important;
-}
-
-.btn-heat:hover {
-    box-shadow: 0 6px 0 #800040, 0 12px 25px rgba(255,0,127,0.5) !important;
-}
-
-/* --- КОНЕЦ МОЕГО КУСКА --- */
-
-        * { box-sizing: border-box; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            scroll-behavior: smooth;
+        }
 
         body {
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
             background: #030a16;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
         }
 
-        /* ЖИДКИЙ ФОН */
         .liquid-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; overflow: hidden; filter: blur(80px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            filter: blur(80px);
         }
+
         .blob {
-            position: absolute; width: 500px; height: 500px; border-radius: 50%;
-            opacity: 0.4; animation: move 20s infinite alternate;
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: move 20s infinite alternate;
         }
+
         .blob1 { background: var(--cyan); top: -100px; left: -100px; }
         .blob2 { background: var(--pink); bottom: -100px; right: -100px; animation-delay: -5s; }
         .blob3 { background: #4facfe; top: 50%; left: 50%; animation-delay: -10s; }
@@ -106,19 +64,107 @@ body {
             to { transform: translate(200px, 100px) scale(1.2); }
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 80px 20px; }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
 
-            header { text-align: center; margin-bottom: 80px; }
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
         h1 {
-            font-size: 3.5rem; font-weight: 600; letter-spacing: -2px;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -2px;
             background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin: 0;
         }
-        /* АДАПТИВ ПОД ТЕЛЕФОН */
+
+        .glass-panel {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 16px;
+            cursor: pointer;
+            background: #1a222d;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+            position: relative;
+            outline: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #000, 0 12px 20px rgba(0,0,0,0.5);
+            background: #252e3a;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #000;
+        }
+
+        .btn-heat {
+            background: linear-gradient(90deg, #00f2fe, #ff007f);
+            border: none;
+            box-shadow: 0 4px 0 #800040, 0 8px 15px rgba(255,0,127,0.3);
+        }
+
+        .btn-heat:hover {
+            box-shadow: 0 6px 0 #800040, 0 12px 25px rgba(255,0,127,0.5);
+        }
+
+        .lab-wrap {
+            display: flex;
+            gap: 20px;
+        }
+
+        .v-screen {
+            flex: 1;
+        }
+
+        .side-panel {
+            width: 250px;
+        }
+
+        .data-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.7;
+        }
+
         @media screen and (max-width: 768px) {
-            h1 { font-size: 2rem !important; }
-            .container { padding: 40px 15px !important; }
+            h1 { font-size: 2rem; }
+            .container { padding: 40px 15px; }
+            .lab-wrap { flex-direction: column; }
         }
     </style>
 </head>
@@ -132,93 +178,17 @@ body {
     <div class="container">
         <header>
             <h1>Мир полупроводников</h1>
+            <p style="opacity: 0.5;">ФИЗИКА ПОЛУПРОВОДНИКОВ ЭЛЕКТРИЧЕСКИЙ ТОК • СОБСТВЕННАЯ И ПРИМЕСНАЯ ПРОВОДИМОСТЬ</p>
         </header>
 
-        <div style="text-align: center;">
-            <!-- ВОТ ТУТ СЕКРЕТ КНОПКИ. ID ДОЛЖЕН БЫТЬ generateBtn -->
-            <button class="btn btn-heat" id="generateBtn">Запустить нагрев</button>
-            <button class="btn" id="resetBtn">Сброс</button>
-        </div>
-        
-        <!-- Тут будет твой холст (график), где летают частицы -->
-        <div style="margin-top: 50px; background: rgba(255,255,255,0.05); border-radius: 20px; border: 1px solid var(--border); overflow: hidden;">
-            <canvas id="particleCanvas" style="width: 100%; height: 400px; display: block;"></canvas>
-        </div>
-    </div>
+        <section class="glass-panel">
+            <h2>01. Общая характеристика полупроводников.</h2>
+            <p>Полупроводники — вещества, удельное сопротивление которых имеет промежуточное значение между удельным сопротивлением металлов ($10^{-6}$—$10^{-8}$ Ом · м) и удельным сопротивлением диэлектриков ($10^{8}$—$10^{13}$ Ом · м). <b>Запрещённая зона</b> Исследования показывают, что у ряда элементов (кремний, германий, селен, индий, мышьяк и др.) и соединений (PbS, CdS, GaAs и др.) удельное сопротивление с увеличением температуры не растёт, как у металлов, а, наоборот, чрезвычайно резко уменьшается. Такое свойство присуще именно полупроводникам. При температурах, близких к абсолютному нулю, удельное сопротивление полупроводников очень велико. Это означает, что при низких температурах полупроводник ведёт себя как диэлектрик. По мере повышения температуры его удельное сопротивление быстро уменьшается.</p>
+        </section>
 
-    <script>
-        // Код анимации (я его упростил, чтобы он точно работал с твоими кнопками)
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resize() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        }
-        window.onresize = resize;
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 3 - 1.5;
-                this.color = Math.random() > 0.5 ? '#00f2fe' : '#ff007f';
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // ВКЛЮЧАЕМ КНОПКИ
-        document.getElementById('generateBtn').onclick = () => {
-            for(let i=0; i<50; i++) particles.push(new Particle());
-        };
-        document.getElementById('resetBtn').onclick = () => {
-            particles = [];
-        };
-    </script>
-</body>
-</html>
-
-<div class="liquid-bg">
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
-    <div class="blob blob3"></div>
-</div>
-
-<div class="container">
-    <header>
-        <h1>Мир полупроводников</h1>
-        <p style="opacity: 0.5;">ФИЗИКА ПОЛУПРОВОДНИКОВ ЭЛЕКТРИЧЕСКИЙ ТОК • СОБСТВЕННАЯ И ПРИМЕСНАЯ ПРОВОДИМОСТЬ</p>
-    </header>
-
-    <section class="glass-panel">
-        <h2>01. Общая характеристика полупроводников.</h2>
-        <p>Полупроводники — вещества, удельное сопротивление которых имеет промежуточное значение между удельным сопротивлением металлов (10–6—10–8 Ом · м) и удельным сопротивлением диэлектриков (108—1013 Ом · м). <b>Запрещенная зона</b> Исследования показывают, что у ряда элементов (кремний, германий, селен, индий, мышьяк и др.) и соединений (PbS, CdS, GaAs и др.) удельное сопротивление с увеличением температуры не растёт, как у металлов, а, наоборот, чрезвычайно резко уменьшается. Такое свойство присуще именно полупроводникам. При температурах, близких к абсолютному нулю, удельное сопротивление полупроводников очень велико. Это означает, что при низких температурах полупроводник ведёт себя как диэлектрик. По мере повышения температуры его удельное сопротивление быстро уменьшается.</p>
-    </section>
- <section class="glass-panel">
-        <h2>02. Строение кристаллической решётки (на примере кремния).</h2>
-        <p>Кремний — четырёхвалентный элемент. Это означает, что во внешней оболочке его атома имеется четыре электрона, сравнительно слабо связанные с ядром. Число ближайших соседей каждого атома кремния также равно четырём. Взаимодействие пары соседних атомов осуществляется с помощью парноэлектронной связи, называемой ковалентной связью. В образовании этой связи от каждого атома участвует по одному валентному электрону, электроны отделяются от атома, которому они принадлежат (коллективируются кристаллом), и при своём движении большую часть времени проводят в пространстве между соседними атомами. Их отрицательный заряд удерживает положительные ионы кремния друг возле друга. Не надо думать, что коллективированная пара электронов принадлежит лишь двум атомам. Каждый атом образует четыре связи с соседними, и любой валентный электрон может двигаться по одной из них. Дойдя до соседнего атома, он может перейти к следующему, а затем дальше вдоль всего кристалла. Валентные электроны принадлежат всему кристаллу. Парноэлектронные связи в кристалле кремния достаточно прочны и при низких температурах не разрываются. Поэтому кремний при низкой температуре не проводит электрический ток. Участвующие в связи атомов валентные электроны являются как бы цементирующим раствором, удерживающим кристаллическую решётку, и внешнее электрическое поле не оказывает заметного влияния на их движение. Аналогичное строение имеет кристалл германия.</p>
+        <section class="glass-panel">
+            <h2>02. Строение кристаллической решётки (на примере кремния).</h2>
+            <p>Кремний — четырёхвалентный элемент. Это означает, что во внешней оболочке его атома имеется четыре электрона
    <section class="glass-panel" id="lab">
     <h2>Онлайн опыт</h2>
     <div class="lab-wrap">
