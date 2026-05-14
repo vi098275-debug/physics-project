@@ -174,9 +174,9 @@
             border: none;
         }
 
-        .btn-heat:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+        .btn-heat:active {
+            transform: scale(0.95);
+            opacity: 0.8;
         }
 
         footer {
@@ -291,9 +291,9 @@
                         <b id="v-temp">293 K</b>
                     </div>
                     <button class="btn" onclick="spawn(1)">➕ Добавить n-типа (доноры)</button>
-                    <button class="btn" onclick="spawn(2)">➖ Добавить p-типа (акцепторы)</button>
-                    <button class="btn btn-heat" onmousedown="startHeat()" onmouseup="stopHeat()" onmouseleave="stopHeat()">🔥 НАГРЕВ (зажмите)</button>
-                    <button class="btn" onclick="fullReset()">🔄 Сброс системы</button>
+            <button class="btn" onclick="spawn(2)">➖ Добавить p-типа (акцепторы)</button>
+            <button class="btn btn-heat" id="heatButton">🔥 НАГРЕВ (зажмите)</button>
+            <button class="btn" onclick="fullReset()">🔄 Сброс системы</button>
                 </div>
             </div>
         </section>
@@ -350,11 +350,11 @@
         }
 
         function startHeat() {
-            if(heatInterval) clearInterval(heatInterval);
+            if (heatInterval) clearInterval(heatInterval);
             heatInterval = setInterval(() => {
                 temp = Math.min(temp + 5, 800);
-                cond = Math.min(cond + 0.3, 150);
-                if(Math.random() > 0.85) {
+                cond = Math.min(cond + 0.3, 1500); // Максимум 150 мА
+                if (Math.random() > 0.85) {
                     spawn(Math.random() > 0.5 ? 1 : 2);
                 }
                 updateUI();
@@ -362,7 +362,7 @@
         }
 
         function stopHeat() {
-            if(heatInterval) {
+            if (heatInterval) {
                 clearInterval(heatInterval);
                 heatInterval = null;
             }
@@ -374,15 +374,15 @@
         }
 
         function animate() {
-            if(!canvas || !ctx) return;
-            
+            if (!canvas || !ctx) return;
+
             ctx.fillStyle = 'rgba(3, 10, 22, 0.15)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             // Рисуем сетку для эффекта лаборатории
             ctx.strokeStyle = 'rgba(0, 242, 254, 0.1)';
             ctx.lineWidth = 1;
-            for(let i = 0; i < canvas.width; i += 50) {
+            for (let i = 0; i < canvas.width; i += 50) {
                 ctx.beginPath();
                 ctx.moveTo(i, 0);
                 ctx.lineTo(i, canvas.height);
@@ -392,22 +392,23 @@
                 ctx.lineTo(canvas.width, i);
                 ctx.stroke();
             }
-            
+
             const speedMultiplier = Math.min(temp / 200, 3);
-            
+
             dots.forEach(d => {
                 d.x += d.vx * speedMultiplier;
                 d.y += d.vy * speedMultiplier;
-                
+
                 // Телепортация при выходе за границы
-                if(d.x < 0) d.x = canvas.width;
-                if(d.x > canvas.width) d.x = 0;
-                if(d.y < 0) d.y = canvas.height;
-                if(d.y > canvas.height) d.y = 0;
-                
+                if (d.x < 0) d.x = canvas.width;
+                if (d.x > canvas.width) d.x = 0;
+                if (d.y < 0) d.y = canvas.height;
+                if (d.y > canvas.height) d.y = 0;
+                            const speedMultiplier = Math.min(temp / 200, 3);
+
                 // Размер частиц зависит от температуры
                 const size = 3 + (temp - 293) / 200;
-                
+
                 ctx.fillStyle = d.c;
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = d.c;
@@ -416,16 +417,32 @@
                 ctx.fill();
             });
             ctx.shadowBlur = 0;
-            
+
             requestAnimationFrame(animate);
         }
-        
+
         animate();
-        
+
         // Инициализация стартовых частиц
-        for(let i = 0; i < 20; i++) {
+        for (let i = 0; i < 20; i++) {
             spawn(Math.random() > 0.5 ? 1 : 2);
         }
+
+        // Обработчики событий для кнопки нагрева (поддержка мобильных устройств)
+        const heatButton = document.getElementById('heatButton');
+
+        // Обработчики для мыши
+        heatButton.addEventListener('mousedown', startHeat);
+        heatButton.addEventListener('mouseup', stopHeat);
+        heatButton.addEventListener('mouseleave', stopHeat);
+
+        // Обработчики для сенсорного экрана
+        heatButton.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Предотвращает возможные конфликты с прокруткой страницы
+            startHeat();
+        });
+        heatButton.addEventListener('touchend', stopHeat);
+        heatButton.addEventListener('touchcancel', stopHeat);
     </script>
 </body>
 </html>
