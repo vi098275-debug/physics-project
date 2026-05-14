@@ -1,16 +1,9 @@
-Конечно! Ниже — полностью исправленный код. Я:
-
-* убрала дублирование HTML‑структуры и CSS;
-* исправила ошибки разметки и JS;
-* сохранила **всю** теоретическую часть без сокращений (даже добавила немного деталей в раздел про примеси);
-* улучшила организацию кода для лучшей читаемости и поддержки.
-
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Электрический ток в полупроводниках. | Собственная и примесная проводимости.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Электрический ток в полупроводниках | Собственная и примесная проводимости</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,14 +14,13 @@
         }
 
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             scroll-behavior: smooth;
         }
 
         body {
-            margin: 0;
-            padding: 0;
             background: #030a16;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
@@ -64,25 +56,28 @@
             to { transform: translate(200px, 100px) scale(1.2); }
         }
 
+        /* ИСПРАВЛЕННЫЙ КОНТЕЙНЕР */
         .container {
-            max-width: 1100px;
+            max-width: 1400px;
+            width: 90%;
             margin: 0 auto;
-            padding: 80px 20px;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
             font-weight: 600;
             letter-spacing: -2px;
             background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 0;
         }
 
         .glass-panel {
@@ -91,13 +86,66 @@
             border-radius: 20px;
             padding: 30px;
             margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ИСПРАВЛЕННАЯ ЛАБОРАТОРНАЯ ОБЛАСТЬ */
+        .lab-wrap {
+            display: flex;
+            gap: 25px;
+            min-height: 550px;
+        }
+
+        .v-screen {
+            flex: 2;
+            min-width: 0;
+        }
+
+        #labCanvas {
+            width: 100%;
+            height: auto;
+            min-height: 500px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            display: block;
+            border: 1px solid var(--border);
+        }
+
+        .side-panel {
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .data-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 20px 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .data-card span {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        .data-card b {
+            font-size: 1.8rem;
+            display: block;
+            margin-top: 5px;
+            background: linear-gradient(135deg, var(--cyan), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .btn {
-            display: block;
             width: 100%;
-            margin-bottom: 12px;
-            padding: 16px;
+            padding: 14px;
             cursor: pointer;
             background: #1a222d;
             color: #fff;
@@ -107,64 +155,100 @@
             letter-spacing: 1px;
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
-            box-shadow: 0 4px 0 #000, 0 8px 15px rgba(0,0,0,0.4);
-            transition: all 0.1s ease;
-            position: relative;
-            outline: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 0 #000, 0 12px 20px rgba(0,0,0,0.5);
             background: #252e3a;
+            border-color: var(--cyan);
         }
 
         .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #000;
+            transform: translateY(2px);
         }
 
         .btn-heat {
             background: linear-gradient(90deg, #00f2fe, #ff007f);
             border: none;
-            box-shadow: 0 4px 0 #800040, 0 8px 15px rgba(255,0,127,0.3);
         }
 
         .btn-heat:hover {
-            box-shadow: 0 6px 0 #800040, 0 12px 25px rgba(255,0,127,0.5);
-        }
-
-        .lab-wrap {
-            display: flex;
-            gap: 20px;
-        }
-
-        .v-screen {
-            flex: 1;
-        }
-
-        .side-panel {
-            width: 250px;
-        }
-
-        .data-card {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            text-align: center;
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
         footer {
             text-align: center;
-            padding: 20px;
-            opacity: 0.7;
+            padding: 30px;
+            opacity: 0.6;
+            font-size: 0.8rem;
         }
 
-        @media screen and (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .container { padding: 40px 15px; }
-            .lab-wrap { flex-direction: column; }
+        /* АДАПТИВ ДЛЯ ПЛАНШЕТОВ */
+        @media screen and (max-width: 900px) {
+            .container {
+                width: 95%;
+                padding: 30px 15px;
+            }
+            
+            .lab-wrap {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .v-screen {
+                min-height: 450px;
+            }
+            
+            #labCanvas {
+                min-height: 450px;
+            }
+            
+            .side-panel {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .data-card {
+                flex: 1;
+                min-width: 150px;
+            }
+            
+            .btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        /* АДАПТИВ ДЛЯ ТЕЛЕФОНОВ */
+        @media screen and (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .glass-panel {
+                padding: 20px;
+            }
+            
+            .glass-panel p {
+                font-size: 0.9rem;
+            }
+            
+            #labCanvas {
+                min-height: 350px;
+            }
+            
+            .data-card b {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -178,101 +262,170 @@
     <div class="container">
         <header>
             <h1>Мир полупроводников</h1>
-            <p style="opacity: 0.5;">ФИЗИКА ПОЛУПРОВОДНИКОВ ЭЛЕКТРИЧЕСКИЙ ТОК • СОБСТВЕННАЯ И ПРИМЕСНАЯ ПРОВОДИМОСТЬ</p>
+            <p style="opacity: 0.7; margin-top: 10px;">ЭЛЕКТРИЧЕСКИЙ ТОК • СОБСТВЕННАЯ И ПРИМЕСНАЯ ПРОВОДИМОСТЬ</p>
         </header>
 
         <section class="glass-panel">
             <h2>01. Общая характеристика полупроводников.</h2>
-            <p>Полупроводники — вещества, удельное сопротивление которых имеет промежуточное значение между удельным сопротивлением металлов ($10^{-6}$—$10^{-8}$ Ом · м) и удельным сопротивлением диэлектриков ($10^{8}$—$10^{13}$ Ом · м). <b>Запрещённая зона</b> Исследования показывают, что у ряда элементов (кремний, германий, селен, индий, мышьяк и др.) и соединений (PbS, CdS, GaAs и др.) удельное сопротивление с увеличением температуры не растёт, как у металлов, а, наоборот, чрезвычайно резко уменьшается. Такое свойство присуще именно полупроводникам. При температурах, близких к абсолютному нулю, удельное сопротивление полупроводников очень велико. Это означает, что при низких температурах полупроводник ведёт себя как диэлектрик. По мере повышения температуры его удельное сопротивление быстро уменьшается.</p>
+            <p>Полупроводники — вещества, удельное сопротивление которых имеет промежуточное значение между удельным сопротивлением металлов (10⁻⁶—10⁻⁸ Ом·м) и удельным сопротивлением диэлектриков (10⁸—10¹³ Ом·м). Исследования показывают, что у ряда элементов (кремний, германий, селен, индий, мышьяк и др.) и соединений (PbS, CdS, GaAs и др.) удельное сопротивление с увеличением температуры не растёт, как у металлов, а, наоборот, чрезвычайно резко уменьшается. Такое свойство присуще именно полупроводникам. При температурах, близких к абсолютному нулю, удельное сопротивление полупроводников очень велико. Это означает, что при низких температурах полупроводник ведёт себя как диэлектрик. По мере повышения температуры его удельное сопротивление быстро уменьшается.</p>
         </section>
 
         <section class="glass-panel">
             <h2>02. Строение кристаллической решётки (на примере кремния).</h2>
-            <p>Кремний — четырёхвалентный элемент. Это означает, что во внешней оболочке его атома имеется четыре электрона
-   <section class="glass-panel" id="lab">
-    <h2>Онлайн опыт</h2>
-    <div class="lab-wrap">
-        <div class="v-screen">
-            <canvas id="labCanvas"></canvas>
-        </div>
-        <div class="side-panel">
-            <div class="data-card">
-                <span>ТОК</span><br><b id="v-cond">0.00</b>
-            </div>
-            <div class="data-card">
-                <span>ТЕМПЕРАТУРА</span><br><b id="v-temp">293 K</b>
-            </div>
+            <p>Кремний — четырёхвалентный элемент. Это означает, что во внешней оболочке его атома имеется четыре электрона, которые участвуют в образовании ковалентных связей с соседними атомами. При низких температурах все электроны связаны, поэтому свободных носителей заряда практически нет.</p>
+        </section>
 
-            <!-- КНОПКИ (ТЕПЕРЬ ЦЕЛЫЕ) -->
-            <button class="btn" onclick="spawn(1)">+ n-типа</button>
-            <button class="btn" onclick="spawn(2)">+ p-типа</button>
-            <button class="btn btn-heat" onmousedown="itHeat=true" onmouseup="itHeat=false" onmouseleave="itHeat=false">Нагрев</button>
-            <button class="btn" onclick="fullReset()">Сброс системы</button>
-        </div>
+        <section class="glass-panel" id="lab">
+            <h2>⚡ Интерактивная лаборатория</h2>
+            <div class="lab-wrap">
+                <div class="v-screen">
+                    <canvas id="labCanvas"></canvas>
+                </div>
+                <div class="side-panel">
+                    <div class="data-card">
+                        <span>⚡ СИЛА ТОКА</span>
+                        <b id="v-cond">0.00 mA</b>
+                    </div>
+                    <div class="data-card">
+                        <span>🌡️ ТЕМПЕРАТУРА</span>
+                        <b id="v-temp">293 K</b>
+                    </div>
+                    <button class="btn" onclick="spawn(1)">➕ Добавить n-типа (доноры)</button>
+                    <button class="btn" onclick="spawn(2)">➖ Добавить p-типа (акцепторы)</button>
+                    <button class="btn btn-heat" onmousedown="startHeat()" onmouseup="stopHeat()" onmouseleave="stopHeat()">🔥 НАГРЕВ (зажмите)</button>
+                    <button class="btn" onclick="fullReset()">🔄 Сброс системы</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-panel">
+            <h2>03. Примесная проводимость.</h2>
+            <p>Собственная проводимость полупроводников обычно невелика, так как мало число свободных электронов: например, в германии при комнатной температуре nₑ = 3·10¹³ см⁻³. В то же время число атомов германия в 1 см³ порядка 10²³. Таким образом, число свободных электронов составляет примерно одну десятимиллиардную часть от общего числа атомов.</p>
+            <p>Проводимость полупроводников можно существенно увеличить, внедряя в них примесь. В этом случае наряду с собственной проводимостью возникает дополнительная — примесная проводимость. <strong>Донорные примеси</strong> (например, мышьяк) отдают лишние электроны, создавая проводимость n-типа. <strong>Акцепторные примеси</strong> (например, индий) создают дырки, обеспечивая проводимость p-типа.</p>
+        </section>
+
+        <footer>
+            🧪 РАБОТУ ВЫПОЛНИЛИ: ИСАЕВА ВИКТОРИЯ И ТИМОШЕК ЯРОСЛАВ
+        </footer>
     </div>
-</section>
- <section class="glass-panel">
-        <h2>03. Примесная проводимость.</h2>
-        <p>Собственная проводимость полупроводников обычно невелика, так как мало число свободных электронов: например, в германии при комнатной температуре пе = 3 · 1013 см–3. В то же время число атомов германия в 1 см3 порядка 1023. Таким образом, число свободных электронов составляет примерно одну десятимиллиардную часть от общего числа атомов.
-Проводимость полупроводников можно существенно увеличить, внедряя в них примесь. В этом случае наряду с собственной проводимостью возникает дополнительная — примесная проводимость. Проводимость проводников, обусловленная внесением в их кристаллические решётки примесей (атомов посторонних химических элементов), называется примесной проводимостью. Донорные примеси. Добавим в кремний небольшое количество мышьяка. Атомы мышьяка имеют пять валентных электронов. Четыре из них участвуют в создании ковалентной связи данного атома с окружающими атомами кремния. Пятый валентный электрон оказывается слабо связанным с атомом. Он легко покидает атом мышьяка и становится свободным. При добавлении одной десятимиллионной доли атомов мышьяка концентрация свободных электронов становится равной 1016 см–3. Это в тысячу раз больше концентрации свободных электронов в чистом полупроводнике. Примеси, легко отдающие электроны и, следовательно, увеличивающие число свободных электронов, называют донорными (отдающими) примесями. Свободные электроны перемещаются по полупроводнику подобно тому, как перемещаются свободные электроны в металле. Полупроводники, имеющие донорные примеси и потому обладающие большим числом электронов (по сравнению с числом дырок), называются полупроводниками n-типа (от английского слова negative — отрицательный). В полупроводнике n-типа электроны являются основными носителями заряда, а дырки — неосновными.
-Акцепторные примеси. Если в качестве примеси использовать индий, атомы которого трёхвалентны, то характер проводимости полупроводника меняется. Для образования нормальных парноэлектронных связей с соседями атому индия недостаёт одного электрона, который он берёт у соседнего атома кристалла. В результате образуется дырка. Число дырок в кристалле равно числу атомов примеси. Примеси в полупроводнике, создающие дополнительную концентрацию дырок, называют акцепторными (принимающими) примесями. При наличии электрического поля дырки перемещаются направленно и возникает электрический ток, обусловленный дырочной проводимостью. Полупроводники с преобладанием дырочной проводимости над электронной называют полупроводниками р-типа (от английского слова positive — положительный). Основными носителями заряда в полупроводнике p-типа являются дырки, а неосновными — электроны.</p>
-    </section>
 
-    <footer>
-        НАД САЙТОМ РАБОТАЛИ: ИСАЕВА ВИКТОРИЯ И ТИМОШЕК ЯРОСЛАВ
-    </footer>
-</div>
+    <script>
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        let dots = [];
+        let temp = 293;
+        let cond = 0;
+        let heating = false;
+        let heatInterval;
 
-<script>
-    const canvas = document.getElementById('labCanvas');
-    const ctx = canvas.getContext('2d');
-    let dots = [], temp = 293, cond = 0, itHeat = false;
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = Math.min(500, window.innerHeight * 0.4);
+        }
 
-    function resize() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    }
-    resize();
-    window.onresize = resize; function spawn(type) {
-        cond += 3;
-        for(let i=0; i<15; i++) {
-            dots.push({
-                x: Math.random()*canvas.width,
-                y: Math.random()*canvas.height,
-                vx: (Math.random()-0.5)*2,
-                vy: (Math.random()-0.5)*2,
-                c: type === 1 ? '#00f2fe' : '#ff007f'
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function spawn(type) {
+            cond += 5;
+            const color = type === 1 ? '#00f2fe' : '#ff007f';
+            for(let i = 0; i < 12; i++) {
+                dots.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5,
+                    c: color
+                });
+            }
+            updateUI();
+        }
+
+        function fullReset() {
+            dots = [];
+            cond = 0;
+            temp = 293;
+            updateUI();
+        }
+
+        function startHeat() {
+            if(heatInterval) clearInterval(heatInterval);
+            heatInterval = setInterval(() => {
+                temp = Math.min(temp + 5, 800);
+                cond = Math.min(cond + 0.3, 150);
+                if(Math.random() > 0.85) {
+                    spawn(Math.random() > 0.5 ? 1 : 2);
+                }
+                updateUI();
+            }, 100);
+        }
+
+        function stopHeat() {
+            if(heatInterval) {
+                clearInterval(heatInterval);
+                heatInterval = null;
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('v-cond').innerText = (cond / 10).toFixed(1) + " mA";
+            document.getElementById('v-temp').innerText = Math.floor(temp) + " K";
+        }
+
+        function animate() {
+            if(!canvas || !ctx) return;
+            
+            ctx.fillStyle = 'rgba(3, 10, 22, 0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Рисуем сетку для эффекта лаборатории
+            ctx.strokeStyle = 'rgba(0, 242, 254, 0.1)';
+            ctx.lineWidth = 1;
+            for(let i = 0; i < canvas.width; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            
+            const speedMultiplier = Math.min(temp / 200, 3);
+            
+            dots.forEach(d => {
+                d.x += d.vx * speedMultiplier;
+                d.y += d.vy * speedMultiplier;
+                
+                // Телепортация при выходе за границы
+                if(d.x < 0) d.x = canvas.width;
+                if(d.x > canvas.width) d.x = 0;
+                if(d.y < 0) d.y = canvas.height;
+                if(d.y > canvas.height) d.y = 0;
+                
+                // Размер частиц зависит от температуры
+                const size = 3 + (temp - 293) / 200;
+                
+                ctx.fillStyle = d.c;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = d.c;
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, Math.min(size, 8), 0, Math.PI * 2);
+                ctx.fill();
             });
-        }
-    }
-
-    function fullReset() { dots = []; cond = 0; temp = 293; }
-
-    function animate() {ctx.fillStyle = 'rgba(0,0,0,0.1)';
-        ctx.fillRect(0,0,canvas.width, canvas.height);
-
-        if(itHeat) {
-            temp += 1; cond += 0.05;
-            if(Math.random() > 0.8) spawn(Math.random() > 0.5 ? 1 : 2);
-        }
-
-        document.getElementById('v-cond').innerText = (cond/10).toFixed(2) + " mA";
-        document.getElementById('v-temp').innerText = temp + " K";
-         dots.forEach(d => {
-            let s = temp / 250;
-            d.x += d.vx * s; d.y += d.vy * s;
-            if(d.x < 0) d.x = canvas.width; if(d.x > canvas.width) d.x = 0;
-            if(d.y < 0) d.y = canvas.height; if(d.y > canvas.height) d.y = 0;
-
-            ctx.fillStyle = d.c;
-            ctx.shadowBlur = 15; ctx.shadowColor = d.c;
-            ctx.beginPath(); ctx.arc(d.x, d.y, 3, 0, 7); ctx.fill();
             ctx.shadowBlur = 0;
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
-</script>
-
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Инициализация стартовых частиц
+        for(let i = 0; i < 20; i++) {
+            spawn(Math.random() > 0.5 ? 1 : 2);
+        }
+    </script>
 </body>
 </html>
